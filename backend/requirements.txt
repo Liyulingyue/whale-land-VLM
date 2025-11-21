@@ -1,13 +1,19 @@
-PyYAML>=6.0
+# Core dependencies
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-dotenv>=1.0.0
+pydantic>=2.0.0
 
-Pillow>=9.0.0
-
+# AI/ML dependencies
+openai>=1.0.0
 zhipuai>=2.0.0
 
-python-dotenv>=1.0.0
-
-gradio
-
-PyQt5>=5.15.0
-
+# Image processing
+Pillow>=9.0.0
 opencv-python>=4.8.0
+
+# Data handling
+PyYAML>=6.0
+
+# Optional dependencies
+# PyQt5>=5.15.0  # Uncomment if needed for desktop interface

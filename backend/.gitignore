@@ -1,23 +1,61 @@
-*.pyc
-
-.env
-
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-venv/
-env/
-ENV/
-
-.gradio/
-.vscode/
+# Virtual Environment
 .venv/
+venv/
+ENV/
+env/
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
 .idea/
 *.swp
 *.swo
-/local_data/temp_fish_tts
-/local_data
-/logs
-/logs
-*.jpg
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Models and data
+models/*
+!models/.gitkeep
+*.pth
+*.pt
+*.onnx
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Uploads
+uploads/

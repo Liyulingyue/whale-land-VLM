@@ -25,7 +25,7 @@ class LLM:
         if not self.api_key:
             raise ValueError(f"请在.env项目文件中设置{llm_backend.upper()}_API_KEY环境变量")
         
-        self.model_name = os.getenv('MODEL_NAME', 'gpt-4.1-mini')
+        self.model_name = os.getenv('MODEL_NAME', 'gpt-4o-mini')
 
         self.client = OpenAI(
             base_url=self.base_url,

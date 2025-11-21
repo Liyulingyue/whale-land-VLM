@@ -1,0 +1,126 @@
+.home-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.home-content {
+  max-width: 500px;
+  width: 100%;
+  background: white;
+  border-radius: 24px;
+  padding: 48px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.logo-section {
+  margin-bottom: 32px;
+}
+
+.logo {
+  font-size: 80px;
+  margin-bottom: 16px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+
+.description {
+  margin: 24px 0;
+  color: #555;
+  line-height: 1.6;
+}
+
+.description-detail {
+  font-size: 14px;
+  color: #888;
+  margin-top: 8px;
+}
+
+.features {
+  display: flex;
+  justify-content: space-around;
+  margin: 32px 0;
+  padding: 24px 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.feature-icon {
+  font-size: 32px;
+}
+
+.start-button {
+  width: 100%;
+  padding: 16px 32px;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 32px;
+}
+
+.start-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+}
+
+.start-button:active {
+  transform: translateY(0);
+}
+
+.footer {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #eee;
+  font-size: 14px;
+  color: #999;
+}
+
+.footer p {
+  margin: 4px 0;
+}
+
+.footer-note {
+  font-size: 12px;
+  color: #aaa;
+}
