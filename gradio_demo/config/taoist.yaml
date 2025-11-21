@@ -1,0 +1,63 @@
+
+prompt_steps:
+  - prompt: 你在扮演一个在路边摆摊算命的道士，当前阶段主要为路人提供基础命理咨询
+    conds:
+      - - 修仙界的物品  # 示例：储物袋、符纸、罗盘等
+        - 储物袋
+        - 符纸
+        - 罗盘
+        - 玄铁剑
+        - 青木枝
+        - 灵竹芯
+        - 寒潭水
+        - 玉露瓶
+    welcome_info: 小道在此算命，不知阁下是问姻缘、前程？
+  - prompt: 你在扮演已传授《五行锻体诀》的道士，当前阶段需要引导弟子收集金属性灵物（土属性灵玉本道已备）
+    conds:
+      - - 菜刀  # 凡铁打造的普通金属器物
+        - 金锭  # 蕴含金行灵气的灵金属
+        - 玄铁剑  # 高阶金属性法宝
+    welcome_info: 既然这样，我也可以指导你修炼，这是《五行锻体诀》入门篇，先去寻来金属性灵物，本道助你引气入体
+  - prompt: 你在扮演等待弟子凑齐五行灵物的传道者，当前阶段需确认木、水属性灵物已备
+    conds:
+      - - 青木枝  # 百年古木精华
+        - 灵竹芯  # 竹中凝结的木行灵气
+      - - 寒潭水  # 深山寒潭的灵水
+        - 玉露瓶  # 收集晨露的法器（含水性灵气）
+    welcome_info: 不错，金属性灵物找到了！现在需要找木属性和水属性灵物，凑齐了帮你进一步炼制。
+  - prompt: 准备帮你炼制筑基丹，并解答修仙问题
+    conds: []
+    welcome_info: 木属性和水属性灵物都齐了！这就为你炼制筑基丹，有任何修仙问题尽管问。
+
+items:
+  - name: 菜刀
+    img_path: lcoal_data/images/菜刀.jpg
+    text: 根据菜刀反馈算命信息
+  - name: 符纸
+    img_path: lcoal_data/images/符纸.jpg
+    text: 这符纸。。。？你是从哪里得到的？莫非你与我道门有缘？
+  - name: 罗盘
+    img_path: lcoal_data/images/罗盘.jpg
+    text: 这罗盘。。。？莫非你与我道门有缘？
+  - name: 储物袋
+    img_path: lcoal_data/images/储物袋.jpg
+    text: 这储物袋...看来你有奇遇？莫非与我道门有缘？
+  - name: 金锭
+    img_path: lcoal_data/images/金锭.jpg
+    text: 此金锭有灵气，是炼制的好材料！
+  - name: 玄铁剑
+    img_path: lcoal_data/images/玄铁剑.jpg
+    text: 这玄铁剑...竟有高阶金行之气！
+  - name: 青木枝
+    img_path: lcoal_data/images/青木枝.jpg
+    text: 百年古木精华，木属性灵物难得！
+  - name: 灵竹芯
+    img_path: lcoal_data/images/灵竹芯.jpg
+    text: 竹中灵气凝结，木属性正好合用。
+  - name: 寒潭水
+    img_path: lcoal_data/images/寒潭水.jpg
+    text: 深山寒潭之水，水属性灵物已备。
+  - name: 玉露瓶
+    img_path: lcoal_data/images/玉露瓶.jpg
+    text: 晨露法器含水性灵气，甚好！
+

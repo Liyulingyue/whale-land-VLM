@@ -1,0 +1,34 @@
+# ImageMaster配置文件 - HF Mirror版本（推荐国内用户使用）
+
+# 模型设置
+model:
+  source: "hf_mirror"  # huggingface（官方）或 hf_mirror（国内镜像，推荐）
+  name: "openai/clip-vit-base-patch16"  # 模型名称
+  mirror_url: "https://hf-mirror.com"  # 镜像站点URL
+  device: "cpu"  # 使用CPU进行推理
+
+# 数据库设置
+database:
+  default_path: "local_data/official_image"
+  data_file: "image_features.jsonl"
+  backup_interval: 100  # 每添加多少张图片后自动备份
+
+# 相似度设置
+similarity:
+  threshold: 0.8  # 相似度阈值，高于此值认为是同一物体
+  max_results: 5  # 返回最相似的结果数量
+
+# 图片处理设置
+image:
+  max_size: [512, 512]  # 最大尺寸
+  supported_formats: [".jpg", ".jpeg", ".png", ".bmp", ".tiff"]
+  
+# 压缩设置
+compression:
+  feature_precision: 6  # 特征向量保存精度（小数点后位数）
+  encoding: "base64"  # 压缩编码方式
+
+# 日志设置
+logging:
+  level: "INFO"
+  file: "logs/image_master.log"

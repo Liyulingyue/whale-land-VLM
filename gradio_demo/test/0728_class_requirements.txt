@@ -1,0 +1,62 @@
+先搜索4张测试图片
+cat_1.jpg,  cat_2.jpg, dog_1.jpg, dog_2.jpg
+测试图片应该保存在asset/test_img 下
+也可以搜索更多的物体的照片作为其他功能的测试
+
+我希望实现一个类ImageMaster
+这个类可以
+- 为图片抽取 openai/clip-vit-base-patch16 的image 特征
+- 从default_path = local_data/image_base 下读取数据文件，载入过往的图片数据库
+- 对新的图片特征，可以在库中做比较，并且返回最相近的图片和对应的名词，以及cosine相似度
+- 可以记录新的图片
+
+ImageMaster应该包含以下方法
+数据库默认从local_data/official_image 中载入
+- set_from_config( config_file_path ) 通过config进行阈值设定载入等等
+    - 这里使用yaml形式的config方便修改，config保存在 config/image_master.yaml中
+- init_model( ) 将模型进行初始化
+- extract_feature( image ) 返回特征
+- load_database( ) 从default_path中载入特征 - 物品名数据库
+- record( image, name ) 记录一张新的图片到数据库
+- extract_item_from_image( image ) 从图片中提取物品
+- extract_item_from_feature( feature ) 从特征中提取物品
+- add_images( new_image_paths ) 从文件夹批量添加
+
+## 保存
+保存的时候只需要保存特征和对应的物体名字就可以
+多个特征有可能是同一个物体名字的
+注意这里我希望用jsonl进行保存，每行保存一个物体
+但是 使用jsonl保存浮点数会很长
+这里我希望编码成压缩的字符的形式（类似base64）在jsonl中进行保存
+
+## 用户手动删除
+这里用户有可能会手动local_data/official_image下的图片
+所以每次load_database的时候都要重新从jsonl中载入
+
+## 从文件夹添加
+添加的照片都会放在同一个目录
+如果读取或者抽取特征失败就跳过
+另外图片可能以 物品名.jpg 或者是 物品名_防重复后缀.jpg的形式 命名
+将文件名提取为物品名的时候，把最后一个_之后的内容去掉
+
+
+----------------------
+
+
+考虑到国内有可能无法快速链接hugging face
+
+所以要在config/image_master.yaml中增加一个开关
+
+支持切换hugging face还是model scope
+
+如果选择model scope 则 使用 openai-mirror/clip-vit-base-patch16 模型
+
+另外帮我验证下同一张图使用 openai-mirror/clip-vit-base-patch16 和 hf上的openai/clip-vit-base-patch16 提取的特征是否一致
+
+
+---
+
+# TODO
+写个加图片的gradio
+看看gradio支不支持随时
+写个带摄像头加 那个的

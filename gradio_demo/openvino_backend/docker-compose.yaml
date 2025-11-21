@@ -1,0 +1,20 @@
+services:
+  vllm-xpu-service:
+    image: openvino/model_server:latest-gpu
+    container_name: openvino-modelserver
+    user: 1000:1000
+    network_mode: host
+    shm_size: 8gb
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - 992
+    volumes:
+      - /dev/dri/by-path:/dev/dri/by-path
+      - ./models/openvino-workspace/models
+    command:
+      --source_model OpenVINO/Qwen2.5-1.5B-Instruct-int4-ov
+      --model_repository_path /openvino-workspace/models
+      --rest_port 8000
+      --target_device GPU
+      --cache_size 2
