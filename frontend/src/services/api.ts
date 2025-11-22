@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { SessionInfo, ChatResponse, ImageUploadResponse } from '../types';
 
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -27,8 +27,10 @@ export const gameService = {
   },
 
   // 重置会话
-  resetSession: async (sessionId: string): Promise<SessionInfo> => {
-    const response = await api.post(`/session/${sessionId}/reset`);
+  resetSession: async (sessionId: string, configPath?: string): Promise<SessionInfo> => {
+    const response = await api.post(`/session/${sessionId}/reset`, {
+      config_path: configPath,
+    });
     return response.data;
   },
 

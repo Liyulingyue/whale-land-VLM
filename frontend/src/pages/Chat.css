@@ -295,6 +295,112 @@
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
+/* 重置确认对话框 */
+.reset-confirm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s;
+}
+
+.reset-confirm-content {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.reset-confirm-header {
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.reset-confirm-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.reset-confirm-body {
+  padding: 24px;
+  text-align: center;
+}
+
+.reset-confirm-body p {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.reset-warning {
+  color: #e74c3c !important;
+  font-weight: 500;
+  font-size: 14px !important;
+}
+
+.reset-confirm-actions {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px 24px;
+  justify-content: center;
+}
+
+.reset-cancel,
+.reset-confirm {
+  flex: 1;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.reset-cancel {
+  background: #f0f0f0;
+  color: #666;
+  border: 1px solid #e0e0e0;
+}
+
+.reset-cancel:hover {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.reset-confirm {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+}
+
+.reset-confirm:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .message {
@@ -303,5 +409,19 @@
 
   .camera-preview {
     max-height: 60vh;
+  }
+
+  .reset-confirm-content {
+    margin: 20px;
+    width: calc(100% - 40px);
+  }
+
+  .reset-confirm-actions {
+    flex-direction: column;
+  }
+
+  .reset-cancel,
+  .reset-confirm {
+    width: 100%;
   }
 }

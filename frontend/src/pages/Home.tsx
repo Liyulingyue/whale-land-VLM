@@ -4,9 +4,8 @@ import './Home.css';
 const Home = () => {
   const navigate = useNavigate();
 
-  const startGame = () => {
-    const sessionId = `session_${Date.now()}`;
-    navigate('/chat', { state: { sessionId } });
+  const goToLevelSelect = () => {
+    navigate('/levels');
   };
 
   return (
@@ -40,8 +39,8 @@ const Home = () => {
           </div>
         </div>
 
-        <button className="start-button" onClick={startGame}>
-          开始游戏
+        <button className="start-button" onClick={goToLevelSelect}>
+          选择关卡
         </button>
 
         <div className="footer">

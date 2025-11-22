@@ -1,0 +1,186 @@
+.level-select-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.level-select-header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 40px;
+  color: white;
+}
+
+.back-button {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background 0.3s;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.level-select-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.level-grid {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.level-card {
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.level-card:hover {
+  background: #f8f9fa;
+  border-color: #667eea;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+}
+
+.level-icon {
+  font-size: 56px;
+  margin-right: 24px;
+  flex-shrink: 0;
+}
+
+.level-info {
+  flex: 1;
+}
+
+.level-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.level-description {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+}
+
+.level-meta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.level-difficulty {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.level-difficulty.简单 {
+  background: #d4edda;
+  color: #155724;
+}
+
+.level-difficulty.中等 {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.level-difficulty.困难 {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.level-time {
+  font-size: 14px;
+  color: #888;
+}
+
+.level-arrow {
+  font-size: 24px;
+  color: #ccc;
+  margin-left: 20px;
+  transition: all 0.3s ease;
+}
+
+.level-card:hover .level-arrow {
+  color: #667eea;
+  transform: translateX(8px);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .level-select-container {
+    padding: 16px;
+  }
+
+  .level-select-header {
+    margin-bottom: 24px;
+  }
+
+  .back-button {
+    position: static;
+    margin-bottom: 16px;
+    width: auto;
+    height: auto;
+    padding: 8px 12px;
+  }
+
+  .level-select-title {
+    font-size: 28px;
+  }
+
+  .level-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px 16px;
+  }
+
+  .level-icon {
+    margin-right: 0;
+    margin-bottom: 16px;
+  }
+
+  .level-info {
+    text-align: center;
+  }
+
+  .level-meta {
+    justify-content: center;
+  }
+
+  .level-arrow {
+    margin-left: 0;
+    margin-top: 12px;
+  }
+}

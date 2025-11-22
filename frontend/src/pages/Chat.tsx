@@ -9,11 +9,15 @@ const Chat = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const sessionId = location.state?.sessionId || `session_${Date.now()}`;
+  const levelConfig = location.state?.levelConfig || 'config/police.yaml';
+  const levelTitle = location.state?.levelTitle || '鲸娱秘境';
   
   const [messages, setMessages] = useState<Message[]>([]);
+  const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState('');
   const [showCamera, setShowCamera] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -40,7 +44,7 @@ const Chat = () => {
 
   const initSession = async () => {
     try {
-      const sessionInfo = await gameService.createSession(sessionId);
+      const sessionInfo = await gameService.createSession(sessionId, levelConfig);
       setStatus(sessionInfo.status);
       
       // 添加欢迎消息
@@ -58,6 +62,49 @@ const Chat = () => {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleSendMessage = async () => {
+    if (!inputText.trim() || isLoading) return;
+
+    const userMessage: Message = {
+      id: `msg_${Date.now()}`,
+      type: 'user',
+      content: inputText,
+      timestamp: new Date(),
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputText('');
+    setIsLoading(true);
+
+    try {
+      const response = await gameService.sendMessage(sessionId, inputText);
+      
+      const botMessage: Message = {
+        id: `msg_${Date.now()}_bot`,
+        type: 'assistant',
+        content: response.bot_response,
+        timestamp: new Date(),
+      };
+      
+      setMessages(prev => [...prev, botMessage]);
+      setStatus(response.status);
+    } catch (error: any) {
+      console.error('Failed to send message:', error);
+      
+      const errorMessage = getErrorMessage(error, '消息发送失败');
+      
+      const botMessage: Message = {
+        id: `msg_${Date.now()}_error`,
+        type: 'assistant',
+        content: errorMessage,
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, botMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleImageUpload = async (file: File) => {
@@ -156,24 +203,31 @@ const Chat = () => {
     }
   };
 
-  const handleReset = async () => {
-    if (confirm('确定要重置游戏吗？')) {
-      try {
-        const sessionInfo = await gameService.resetSession(sessionId);
-        setMessages([{
-          id: `msg_${Date.now()}`,
-          type: 'assistant',
-          content: sessionInfo.welcome_info,
-          timestamp: new Date(),
-        }]);
-        setStatus(sessionInfo.status);
-      } catch (error: any) {
-        console.error('Failed to reset session:', error);
-        
-        const errorMessage = getErrorMessage(error, '重置游戏失败');
-        alert(errorMessage);
-      }
+  const handleReset = () => {
+    setShowResetConfirm(true);
+  };
+
+  const confirmReset = async () => {
+    setShowResetConfirm(false);
+    try {
+      const sessionInfo = await gameService.resetSession(sessionId, levelConfig);
+      setMessages([{
+        id: `msg_${Date.now()}`,
+        type: 'assistant',
+        content: sessionInfo.welcome_info,
+        timestamp: new Date(),
+      }]);
+      setStatus(sessionInfo.status);
+    } catch (error: any) {
+      console.error('Failed to reset session:', error);
+      
+      const errorMessage = getErrorMessage(error, '重置游戏失败');
+      alert(errorMessage);
     }
+  };
+
+  const cancelReset = () => {
+    setShowResetConfirm(false);
   };
 
   return (
@@ -183,7 +237,7 @@ const Chat = () => {
           <ArrowLeft size={20} />
         </button>
         <div className="header-title">
-          <h2>🐋 鲸娱秘境</h2>
+          <h2>🐋 {levelTitle}</h2>
           <p className="session-status">{status}</p>
         </div>
         <button className="reset-button" onClick={handleReset}>
@@ -239,6 +293,28 @@ const Chat = () => {
         </div>
       )}
 
+      {showResetConfirm && (
+        <div className="reset-confirm-modal">
+          <div className="reset-confirm-content">
+            <div className="reset-confirm-header">
+              <h3>⚠️ 重置游戏</h3>
+            </div>
+            <div className="reset-confirm-body">
+              <p>确定要重置游戏吗？</p>
+              <p className="reset-warning">这将清除所有游戏进度和对话记录。</p>
+            </div>
+            <div className="reset-confirm-actions">
+              <button className="reset-cancel" onClick={cancelReset}>
+                取消
+              </button>
+              <button className="reset-confirm" onClick={confirmReset}>
+                确定重置
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="input-container">
         <input
           ref={fileInputRef}
@@ -267,15 +343,17 @@ const Chat = () => {
         <input
           type="text"
           className="message-input"
-          placeholder="文字输入功能待开发"
-          value=""
-          disabled={true}
-          readOnly
+          placeholder="输入消息..."
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+          disabled={isLoading}
         />
 
         <button
           className="send-button"
-          disabled={true}
+          onClick={handleSendMessage}
+          disabled={isLoading || !inputText.trim()}
         >
           <Send size={20} />
         </button>
