@@ -6,21 +6,24 @@
 
 ```
 backend/
-├── app.py                 # FastAPI 应用主入口
-├── requirements.txt       # Python 依赖
-├── .env.example          # 环境变量示例
-├── api/                  # API 路由
+├── app/
 │   ├── __init__.py
-│   └── routes.py         # 所有 API 端点定义
-├── src/                  # 核心业务逻辑
-│   ├── __init__.py
-│   ├── GameMaster.py     # 游戏主控制器
-│   ├── llm_response.py   # LLM 响应处理
-│   ├── parse_json.py     # JSON 解析工具
-│   ├── recognize_from_image_glm.py  # 图像识别
-│   └── resize_img.py     # 图片处理工具
-├── config/               # 游戏配置文件
-│   ├── police.yaml       # 警察主题配置
+│   ├── main.py                 # FastAPI 应用主入口
+│   ├── api/                    # API 路由
+│   │   ├── __init__.py
+│   │   └── routes.py           # 所有 API 端点定义
+│   ├── src/                    # 核心业务逻辑
+│   │   ├── __init__.py
+│   │   ├── GameMaster.py       # 游戏主控制器
+│   │   ├── llm_response.py     # LLM 响应处理
+│   │   ├── parse_json.py       # JSON 解析工具
+│   │   ├── recognize_from_vlm.py      # 图像识别
+│   │   └── resize_img.py       # 图片处理工具
+│   ├── config/                 # 游戏配置文件
+│   └── models/                 # 模型文件（如需要）
+├── requirements.txt            # Python 依赖
+├── .env.example               # 环境变量模板
+└── README.md
 │   └── ...               # 其他主题配置
 └── models/               # 模型文件（如需要）
 ```
@@ -53,7 +56,7 @@ copy .env.example .env
 python app.py
 
 # 或使用 uvicorn
-uvicorn app:app --reload --host 0.0.0.0 --port 8000
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 服务器将在 http://localhost:8000 启动
@@ -83,18 +86,19 @@ uvicorn app:app --reload --host 0.0.0.0 --port 8000
 
 | 变量名 | 说明 | 默认值 |
 |--------|------|--------|
-| `LLM_BACKEND` | LLM 后端类型 | `openai` |
-| `OPENAI_API_KEY` | OpenAI API Key | - |
-| `ZHIPU_API_KEY` | 智谱 AI API Key | - |
-| `MODEL_NAME` | 使用的模型名称 | `gpt-4o-mini` |
+| `LLM_BASE_URL` | LLM API 端点 | `https://api.openai.com/v1` |
+| `LLM_API_KEY` | LLM API Key | - |
+| `LLM_MODEL_NAME` | 使用的模型名称 | `gpt-4o-mini` |
 | `PORT` | 服务器端口 | `8000` |
 
-## 支持的 LLM 后端
+## 支持的 LLM 服务
 
+支持所有兼容 OpenAI API 格式的 LLM 服务：
 - **OpenAI** - GPT-4, GPT-3.5 等
 - **SiliconFlow** - 国内 AI 服务
 - **Zhipu AI** - 智谱 GLM 系列
-- **OpenVINO** - 本地推理
+- **DeepSeek** - DeepSeek 系列
+- **其他兼容服务** - 任何支持 OpenAI 格式的 API
 
 ## 开发说明
 

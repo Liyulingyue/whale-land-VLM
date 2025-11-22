@@ -11,9 +11,7 @@ const Chat = () => {
   const sessionId = location.state?.sessionId || `session_${Date.now()}`;
   
   const [messages, setMessages] = useState<Message[]>([]);
-  const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [welcomeInfo, setWelcomeInfo] = useState('');
   const [status, setStatus] = useState('');
   const [showCamera, setShowCamera] = useState(false);
   
@@ -21,6 +19,16 @@ const Chat = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // 通用错误处理函数
+  const getErrorMessage = (error: any, defaultMessage: string): string => {
+    if (error.response?.data?.detail) {
+      return `${defaultMessage}: ${error.response.data.detail}`;
+    } else if (error.message) {
+      return `${defaultMessage}: ${error.message}`;
+    }
+    return defaultMessage;
+  };
 
   useEffect(() => {
     initSession();
@@ -33,7 +41,6 @@ const Chat = () => {
   const initSession = async () => {
     try {
       const sessionInfo = await gameService.createSession(sessionId);
-      setWelcomeInfo(sessionInfo.welcome_info);
       setStatus(sessionInfo.status);
       
       // 添加欢迎消息
@@ -51,46 +58,6 @@ const Chat = () => {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleSendMessage = async () => {
-    if (!inputText.trim() || isLoading) return;
-
-    const userMessage: Message = {
-      id: `msg_${Date.now()}`,
-      type: 'user',
-      content: inputText,
-      timestamp: new Date(),
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    setInputText('');
-    setIsLoading(true);
-
-    try {
-      const response = await gameService.sendMessage(sessionId, inputText);
-      
-      const botMessage: Message = {
-        id: `msg_${Date.now()}_bot`,
-        type: 'assistant',
-        content: response.bot_response,
-        timestamp: new Date(),
-      };
-      
-      setMessages(prev => [...prev, botMessage]);
-      setStatus(response.status);
-    } catch (error) {
-      console.error('Failed to send message:', error);
-      const errorMessage: Message = {
-        id: `msg_${Date.now()}_error`,
-        type: 'assistant',
-        content: '抱歉，消息发送失败，请重试。',
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const handleImageUpload = async (file: File) => {
@@ -117,17 +84,24 @@ const Chat = () => {
       
       setMessages(prev => [...prev, botMessage]);
       setStatus(response.status);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to upload image:', error);
-      const errorMessage: Message = {
+      
+      const errorMessage = getErrorMessage(error, '图片上传失败');
+      
+      const botMessage: Message = {
         id: `msg_${Date.now()}_error`,
         type: 'assistant',
-        content: '抱歉，图片上传失败，请重试。',
+        content: errorMessage,
         timestamp: new Date(),
       };
-      setMessages(prev => [...prev, errorMessage]);
+      setMessages(prev => [...prev, botMessage]);
     } finally {
       setIsLoading(false);
+      // 重置文件输入框，允许再次选择相同文件
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
@@ -173,7 +147,7 @@ const Chat = () => {
         ctx.drawImage(video, 0, 0);
         canvas.toBlob((blob) => {
           if (blob) {
-            const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' });
+            const file = new File([blob], `camera-photo-${Date.now()}.jpg`, { type: 'image/jpeg' });
             handleImageUpload(file);
             stopCamera();
           }
@@ -193,8 +167,11 @@ const Chat = () => {
           timestamp: new Date(),
         }]);
         setStatus(sessionInfo.status);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Failed to reset session:', error);
+        
+        const errorMessage = getErrorMessage(error, '重置游戏失败');
+        alert(errorMessage);
       }
     }
   };
@@ -290,17 +267,15 @@ const Chat = () => {
         <input
           type="text"
           className="message-input"
-          placeholder="输入消息..."
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-          disabled={isLoading}
+          placeholder="文字输入功能待开发"
+          value=""
+          disabled={true}
+          readOnly
         />
 
         <button
           className="send-button"
-          onClick={handleSendMessage}
-          disabled={isLoading || !inputText.trim()}
+          disabled={true}
         >
           <Send size={20} />
         </button>

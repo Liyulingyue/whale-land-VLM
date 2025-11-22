@@ -1,6 +1,6 @@
 # 🐋 鲸娱秘境 Whale Land VLM
 
-MLLM结合线下密室的人工智能创新应用
+VLLM结合线下密室的人工智能创新应用
 
 ## 📁 项目结构
 
@@ -44,7 +44,7 @@ copy .env.example .env
 # 编辑 .env 文件，填入你的 API keys
 
 # 启动服务器
-python app.py
+python -m app.main
 ```
 
 后端将在 http://localhost:8000 启动
@@ -141,15 +141,10 @@ python gradio_with_state.py
 在 `backend/.env` 文件中配置：
 
 ```env
-# LLM 后端选择
-LLM_BACKEND=openai  # openai, zhipu, siliconflow, openvino
-
-# API Keys
-OPENAI_API_KEY=sk-xxx
-ZHIPU_API_KEY=xxx
-
-# 模型配置
-MODEL_NAME=gpt-4o-mini
+# LLM 配置 (OpenAI 兼容格式)
+LLM_BASE_URL=https://api.openai.com/v1
+LLM_API_KEY=sk-xxx
+LLM_MODEL_NAME=gpt-4o-mini
 
 # 服务器端口
 PORT=8000

@@ -1,0 +1,2 @@
+# Session configuration
+session_timeout_minutes: 20  # Session timeout in minutes

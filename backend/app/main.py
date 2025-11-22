@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # 导入路由
-from api.routes import router
+from .api.routes import router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -20,7 +20,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Whale Land VLM API",
-    description="鲸娱秘境 - MLLM结合线下密室的人工智能创新应用 API",
+    description="鲸娱秘境 - VLLM结合线下密室的人工智能创新应用 API",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -52,4 +52,4 @@ async def health_check():
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))
-    uvicorn.run("app:app", host="0.0.0.0", port=port, reload=True)
+    uvicorn.run("app.main:app", host="0.0.0.0", port=port)

@@ -1,11 +1,11 @@
 import os
 import base64
-from dotenv import load_dotenv
-from zhipuai import ZhipuAI
+from openai import OpenAI
 from io import BytesIO
+from ..config.config import get_llm_config
 
 
-def get_vlm_response_cot(resized_img, candidates, model_name="glm-4v-flash", max_tokens=-1):
+def get_vlm_response_cot(resized_img, candidates, max_tokens=-1):
     
     buffered = BytesIO()
     resized_img.save(buffered, format="JPEG")
@@ -22,12 +22,14 @@ Let's think step by step and output in json format, 包括以下字段:
 """
     final_prompt = prompt.format(candidates=candidates)
 
-    load_dotenv()
-    your_api_key = os.getenv('ZHIPU_API_KEY')
-    if not your_api_key:
-        raise ValueError("请在.env项目文件中设置ZHIPU_API_KEY环境变量")
+    llm_config = get_llm_config()
+    base_url = llm_config['base_url']
+    api_key = llm_config['api_key']
+    model_name = llm_config['model_name'] # originally was "glm-4v-flash"
+    if not api_key:
+        raise ValueError("请在.env文件中设置LLM_API_KEY环境变量")
     
-    client = ZhipuAI(api_key=your_api_key)
+    client = OpenAI(base_url=base_url, api_key=api_key)
 
     response = client.chat.completions.create(
         model=model_name,
@@ -38,7 +40,7 @@ Let's think step by step and output in json format, 包括以下字段:
             {
                 "type": "image_url",
                 "image_url": {
-                    "url": img_base
+                    "url": f"data:image/jpeg;base64,{img_base}"
                 }
             },
             {
@@ -52,7 +54,7 @@ Let's think step by step and output in json format, 包括以下字段:
     return response.choices[0].message.content
 
 
-def get_vlm_response(img_path, candidates, model_name="glm-4v-flash", max_tokens=2048):
+def get_vlm_response(img_path, candidates, max_tokens=2048):
     with open(img_path, 'rb') as img_file:
         img_base = base64.b64encode(img_file.read()).decode('utf-8')
 
@@ -60,12 +62,14 @@ def get_vlm_response(img_path, candidates, model_name="glm-4v-flash", max_tokens
             候选列表：{candidates}。请直接输出分类结果，不要包含任何其他描述或解释。"""
     final_prompt = prompt.format(candidates=candidates)
 
-    load_dotenv()
-    your_api_key = os.getenv('ZHIPU_API_KEY')
-    if not your_api_key:
-        raise ValueError("请在.env项目文件中设置ZHIPU_API_KEY环境变量")
+    llm_config = get_llm_config()
+    base_url = llm_config['base_url']
+    api_key = llm_config['api_key']
+    model_name = llm_config['model_name']
+    if not api_key:
+        raise ValueError("请在.env文件中设置LLM_API_KEY环境变量")
     
-    client = ZhipuAI(api_key=your_api_key)
+    client = OpenAI(base_url=base_url, api_key=api_key)
     response = client.chat.completions.create(
         model=model_name,
         messages=[
@@ -75,7 +79,7 @@ def get_vlm_response(img_path, candidates, model_name="glm-4v-flash", max_tokens
             {
                 "type": "image_url",
                 "image_url": {
-                    "url": img_base
+                    "url": f"data:image/jpeg;base64,{img_base}"
                 }
             },
             {

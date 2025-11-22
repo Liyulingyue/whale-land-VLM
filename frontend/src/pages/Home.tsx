@@ -19,7 +19,7 @@ const Home = () => {
         </div>
 
         <div className="description">
-          <p>MLLM结合线下密室的人工智能创新应用</p>
+          <p>VLLM结合线下密室的人工智能创新应用</p>
           <p className="description-detail">
             通过AI对话和图像识别，沉浸式体验密室解谜
           </p>

@@ -7,14 +7,47 @@ import tempfile
 from PIL import Image
 from io import BytesIO
 import base64
+import time
+import yaml
 
-from src.GameMaster import GameMaster
-from src.resize_img import resize_image
+from ..src.GameMaster import GameMaster
+from ..src.resize_img import resize_image
 
 router = APIRouter()
 
 # 全局游戏状态管理（后续可以改为 Redis 或数据库存储）
 game_sessions = {}
+
+# Session 时间戳管理
+session_timestamps = {}
+
+# 加载session配置
+def load_session_config():
+    from ..config.config import get_session_config
+    session_config = get_session_config()
+    return {"session_timeout_minutes": session_config['timeout_minutes']}
+
+session_config = load_session_config()
+SESSION_TIMEOUT_SECONDS = session_config.get("session_timeout_minutes", 20) * 60
+
+def cleanup_expired_sessions():
+    """清理超时的session"""
+    current_time = time.time()
+    expired_sessions = []
+    
+    for session_id, timestamp in session_timestamps.items():
+        if current_time - timestamp > SESSION_TIMEOUT_SECONDS:
+            expired_sessions.append(session_id)
+    
+    for session_id in expired_sessions:
+        if session_id in game_sessions:
+            del game_sessions[session_id]
+        del session_timestamps[session_id]
+        print(f"清理过期session: {session_id}")
+
+def update_session_timestamp(session_id: str):
+    """更新session的最后活动时间"""
+    session_timestamps[session_id] = time.time()
 
 
 class SessionCreate(BaseModel):
@@ -41,6 +74,9 @@ class ImageSubmit(BaseModel):
 async def create_session(session_data: SessionCreate):
     """创建新的游戏会话"""
     try:
+        # 清理过期session
+        cleanup_expired_sessions()
+        
         # 构建配置文件的完整路径
         config_path = os.path.join(os.path.dirname(__file__), "..", session_data.config_path)
         
@@ -49,6 +85,9 @@ async def create_session(session_data: SessionCreate):
         
         game_master = GameMaster(config_path)
         game_sessions[session_data.session_id] = game_master
+        
+        # 记录session创建时间
+        update_session_timestamp(session_data.session_id)
         
         return {
             "session_id": session_data.session_id,
@@ -66,6 +105,7 @@ async def get_session_status(session_id: str):
     if session_id not in game_sessions:
         raise HTTPException(status_code=404, detail="会话不存在")
     
+    update_session_timestamp(session_id)
     game_master = game_sessions[session_id]
     return {
         "session_id": session_id,
@@ -80,6 +120,8 @@ async def reset_session(session_id: str, config_path: Optional[str] = None):
     """重置游戏会话"""
     if session_id not in game_sessions:
         raise HTTPException(status_code=404, detail="会话不存在")
+    
+    update_session_timestamp(session_id)
     
     try:
         if config_path is None:
@@ -105,6 +147,7 @@ async def chat(chat_data: ChatMessage):
     if chat_data.session_id not in game_sessions:
         raise HTTPException(status_code=404, detail="会话不存在，请先创建会话")
     
+    update_session_timestamp(chat_data.session_id)
     game_master = game_sessions[chat_data.session_id]
     
     try:
@@ -124,6 +167,7 @@ async def submit_item(item_data: ItemSubmit):
     if item_data.session_id not in game_sessions:
         raise HTTPException(status_code=404, detail="会话不存在，请先创建会话")
     
+    update_session_timestamp(item_data.session_id)
     game_master = game_sessions[item_data.session_id]
     
     try:
@@ -158,6 +202,7 @@ async def submit_image(image_data: ImageSubmit):
     if image_data.session_id not in game_sessions:
         raise HTTPException(status_code=404, detail="会话不存在，请先创建会话")
     
+    update_session_timestamp(image_data.session_id)
     game_master = game_sessions[image_data.session_id]
     
     try:
@@ -193,6 +238,7 @@ async def upload_image(session_id: str, file: UploadFile = File(...)):
     if session_id not in game_sessions:
         raise HTTPException(status_code=404, detail="会话不存在，请先创建会话")
     
+    update_session_timestamp(session_id)
     game_master = game_sessions[session_id]
     
     try:
@@ -228,6 +274,7 @@ async def get_items(session_id: str):
     if session_id not in game_sessions:
         raise HTTPException(status_code=404, detail="会话不存在")
     
+    update_session_timestamp(session_id)
     game_master = game_sessions[session_id]
     return {
         "items": game_master.get_item_names()
@@ -241,4 +288,6 @@ async def delete_session(session_id: str):
         raise HTTPException(status_code=404, detail="会话不存在")
     
     del game_sessions[session_id]
+    if session_id in session_timestamps:
+        del session_timestamps[session_id]
     return {"message": "会话已删除", "session_id": session_id}

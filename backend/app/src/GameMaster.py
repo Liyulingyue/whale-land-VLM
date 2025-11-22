@@ -1,6 +1,6 @@
 from .llm_response import get_llm_response
 from .parse_json import parse_json
-from .recognize_from_image_glm import get_vlm_response_cot
+from .recognize_from_vlm import get_vlm_response_cot
 
 
 class GameMaster:
