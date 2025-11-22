@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Camera, Send, Image as ImageIcon, ArrowLeft, RotateCcw } from 'lucide-react';
+import { Camera, Send, Image as ImageIcon, RotateCcw } from 'lucide-react';
 import { gameService } from '../services/api';
 import type { Message } from '../types';
 import './Chat.css';
@@ -234,7 +234,7 @@ const Chat = () => {
     <div className="chat-container">
       <div className="chat-header">
         <button className="back-button" onClick={() => navigate('/')}>
-          <ArrowLeft size={20} />
+          ←
         </button>
         <div className="header-title">
           <h2>🐋 {levelTitle}</h2>

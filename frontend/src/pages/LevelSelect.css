@@ -8,6 +8,7 @@
   position: relative;
   text-align: center;
   margin-bottom: 40px;
+  padding: 20px 0;
   color: white;
 }
 
@@ -18,7 +19,6 @@
   background: rgba(255, 255, 255, 0.2);
   border: none;
   color: white;
-  padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 18px;
