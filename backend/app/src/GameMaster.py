@@ -169,7 +169,7 @@ class GameMaster:
         "item_name" - 要针对输出的物品名称{item_name}
         "analysis" - 结合剧情判断剧情中的人物应该进行怎样的输出
         "echo" - 重复下列字符串: 我认为在剧情设定的人物眼里，看到物品 {item_name}时，会说
-        "character_response" - 根据人物性格和剧情设定，输出人物对物品 {item_name} 的反应
+        "character_response" - 根据人物性格和剧情设定，输出人物对物品 {item_name} 的反应。如果物品与当前剧情无关，请生成一个引导用户继续调查的回复，至少包含两句对话，确保回复总是有效且相关。
         """
 
         messages = [
@@ -182,8 +182,8 @@ class GameMaster:
 
         if response_in_dict is not None and "character_response" in response_in_dict:
             response_text = response_in_dict["character_response"]
-        else:
-            response_text = "这是什么？一张不知所云的图片。"
+        # else:
+        #     response_text = "这个物品看起来有点奇怪，不太像是案件线索。你们继续仔细搜索现场，看看还有什么其他可疑的东西吗？"
 
         return response_text
 
