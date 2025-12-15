@@ -182,8 +182,8 @@ class GameMaster:
 
         if response_in_dict is not None and "character_response" in response_in_dict:
             response_text = response_in_dict["character_response"]
-        # else:
-        #     response_text = "这个物品看起来有点奇怪，不太像是案件线索。你们继续仔细搜索现场，看看还有什么其他可疑的东西吗？"
+        else:
+            response_text = "这个物品看起来有点奇怪，不太像是案件线索。你们继续仔细搜索现场，看看还有什么其他可疑的东西吗？"
 
         return response_text
 
